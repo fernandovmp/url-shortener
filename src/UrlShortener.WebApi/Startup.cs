@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using UrlShortener.WebApi.Repositories;
 
 namespace UrlShortener.WebApi
 {
@@ -26,6 +27,9 @@ namespace UrlShortener.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            string connectionString = Configuration.GetConnectionString("MongoConnection");
+            services.AddScoped<IUrlRepository, UrlRepository>(services => new UrlRepository(connectionString));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
