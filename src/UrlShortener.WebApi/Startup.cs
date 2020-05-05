@@ -10,6 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
+using UrlShortener.WebApi.Models;
 using UrlShortener.WebApi.Repositories;
 
 namespace UrlShortener.WebApi
@@ -29,6 +34,14 @@ namespace UrlShortener.WebApi
             services.AddControllers();
             string connectionString = Configuration.GetConnectionString("MongoConnection");
             services.AddScoped<IUrlRepository, UrlRepository>(services => new UrlRepository(connectionString));
+
+            BsonClassMap.RegisterClassMap<Url>(classMapInitializer =>
+            {
+                classMapInitializer.AutoMap();
+                classMapInitializer.MapIdMember(url => url.Id)
+                    .SetIdGenerator(StringObjectIdGenerator.Instance)
+                    .SetSerializer(new StringSerializer(BsonType.ObjectId));
+            });
 
         }
 
