@@ -19,6 +19,11 @@ namespace UrlShortener.WebApi.Repositories
             return await cursor.FirstOrDefaultAsync();
         }
 
+        public async Task Delete(Url url)
+        {
+            await _urls.DeleteOneAsync(dbUrl => dbUrl.Id == url.Id).ConfigureAwait(false);
+        }
+
         public async Task Save(Url url)
         {
             await _urls.InsertOneAsync(url).ConfigureAwait(false);

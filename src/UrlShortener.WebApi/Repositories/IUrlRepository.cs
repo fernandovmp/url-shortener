@@ -7,5 +7,6 @@ namespace UrlShortener.WebApi.Repositories
     {
         Task<Url> GetByShortUrl(string shortUrl);
         Task Save(Url url);
+        Task Delete(Url url);
     }
 }
