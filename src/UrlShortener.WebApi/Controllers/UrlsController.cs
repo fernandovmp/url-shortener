@@ -18,11 +18,18 @@ namespace UrlShortener.WebApi.Controllers
         [HttpGet("/{shortUrl}")]
         public async Task<IActionResult> GetUrl(string shortUrl)
         {
+
             Url url = await _urlRepository.GetByShortUrl(shortUrl);
             if (url is null)
             {
                 return NotFound();
             }
+            if (url.ExpireAt < DateTime.UtcNow)
+            {
+                await _urlRepository.Delete(url).ConfigureAwait(false);
+                return NotFound();
+            }
+
             return Redirect(url.OriginalUrl);
         }
 
@@ -33,7 +40,8 @@ namespace UrlShortener.WebApi.Controllers
             var url = new Url()
             {
                 OriginalUrl = data.Url,
-                ShortUrl = shortUrl
+                ShortUrl = shortUrl,
+                ExpireAt = DateTime.UtcNow.AddDays(15)
             };
             await _urlRepository.Save(url).ConfigureAwait(false);
 
@@ -42,7 +50,8 @@ namespace UrlShortener.WebApi.Controllers
                 shortUrl
             }, new
             {
-                ShortUrl = $"{Request.Scheme}://{Request.Host.ToUriComponent()}/{shortUrl}"
+                ShortUrl = $"{Request.Scheme}://{Request.Host.ToUriComponent()}/{shortUrl}",
+                url.ExpireAt
             });
         }
     }
