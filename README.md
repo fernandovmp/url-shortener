@@ -20,7 +20,7 @@ Simple url shortener built with [ASP.NET Core](https://docs.microsoft.com/en-us/
     -   Response:
         -   Code: 201 Created
         -   Headers:
-            -   Location https://localhost:5001/14b533
+            -   Location `https://localhost:5001/14b533`
         -   Body:
             ```json
             {
@@ -42,7 +42,7 @@ Simple url shortener built with [ASP.NET Core](https://docs.microsoft.com/en-us/
     -   Response:
         -   Code: 302 Found
         -   Headers:
-            -   Location https://github.com
+            -   Location `https://github.com`
         -   Body:
             None
     -   Response if fail:
