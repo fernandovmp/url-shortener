@@ -70,3 +70,19 @@ To run place a connection string to MongoDB in appsettings then run
 ```
 dotnet run --project src/UrlShortener.WebApi
 ```
+
+## Run with docker
+
+Build docker image
+
+```
+docker build src/UrlShortner.WebApi  -t url-shortener
+```
+
+Run the app container
+
+```
+docker run -it -p 8080:80 -e ConnectionStrings__MongoConnection="CONNECTION_STRING" --name url-shortener-app url-shortener
+```
+
+The app will be availible in `http://localhost:8080`
